@@ -5,10 +5,10 @@ OBJ = SDL_Tut_03.cpp
 CC = g++
 
 #Definimos las opciones del compilador y linker
-OPT = -w
+OPT = -w -v
 
 #Definimos las opciones del linker
-LNK = -lSDL2
+LNK = -lmingw32 -lSDL2main -lSDL2
 
 #Definimos el nombre de archivo de salida
 OUT = SDL_Tut_Program

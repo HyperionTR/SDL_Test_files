@@ -1,8 +1,9 @@
+#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <cmath>
 using namespace std;
-
+   
 //Definimos las constantes
 const int w_width = 640;
 const int w_height= 480;

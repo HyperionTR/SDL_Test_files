@@ -8,16 +8,19 @@ using namespace std;
 //Definimos las constantes
 const int w_width = 640;
 const int w_height= 480;
+const int wood_max = 4500;
+const int parts_max = 8000;
+const int cell_spawn = 10;
 
 //Declaramos las funciones a utilizar
 bool init();
 bool load();
-SDL_Surface* load_surface(const char* path);
+// SDL_Surface* load_surface(const char* path);
 void exit();
  
 //Declaramos variables gloables
 SDL_Window* window = NULL;
-SDL_Surface* win_surface = NULL;
+// SDL_Surface* win_surface = NULL;
 SDL_Surface* img_surface = NULL;
 SDL_Renderer* win_renderer = NULL;
 int part_matrix[480][640];
@@ -110,18 +113,18 @@ int main( int argn, char* args[] ){
 				}
  				if ( e.type == SDL_KEYDOWN )
 					if ( e.key.keysym.sym == SDLK_SPACE ){
-						for( int i=0; i<5; i++)
-							for( int j=0; j<5; j++)
+						for( int i=0; i<cell_spawn; i++)
+							for( int j=0; j<cell_spawn; j++)
 								if( !part_matrix[cposY + i][cposX + j] )
 									wood.emplace_back( cposX+j, cposY+i, CELL_WOOD );
 					} else if ( e.key.keysym.sym == SDLK_a ){
-						for (int i = 0; i<5; i++){
+						for (int i = 0; i<cell_spawn; i++){
 							particulas.emplace_back( rand()%( (cposX - 40/2) +40 - (cposX - 40/2))+ (cposX - 40/2),
 													 (cposY - 40/2) + 40,
 													 CELL_SAND );
 						}
 					} else if ( e.key.keysym.sym == SDLK_s ){
-						for (int i = 0; i<5; i++){
+						for (int i = 0; i<cell_spawn; i++){
 							particulas.emplace_back( rand()%( (cposX - 40/2) +40 - (cposX - 40/2))+ (cposX - 40/2),
 													 (cposY - 40/2) ,
 													 CELL_SMOKE );
@@ -154,7 +157,7 @@ int main( int argn, char* args[] ){
 				
 				part_matrix[ (int)wood[i].y ][ (int)wood[i].x ] = true;
 				
-			 	if( wood.size() >= 1500 )
+			 	if( wood.size() >= wood_max )
 					wood.erase( wood.begin()+i );
 					
 			 	if (wood[i].type == CELL_WOOD)
@@ -168,7 +171,7 @@ int main( int argn, char* args[] ){
 				
 				part_matrix[ (int)particulas[i].y ][ (int)particulas[i].x ] = true;
 				
-			 	if( particulas.size() >= 4000 )
+			 	if( particulas.size() >= parts_max )
 					particulas.erase( particulas.begin()+i );
 					
 				if (particulas[i].type == CELL_SAND)
@@ -217,7 +220,7 @@ bool init(){
             success =  false;
         }else
             //Si no hay errores, obtenemos la superficie de la ventana
-            win_surface = SDL_GetWindowSurface(window);
+            // win_surface = SDL_GetWindowSurface(window);
             //Y creamos un renderer acelerado de la ventana principal con CreateRenderer
             win_renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
             if (win_renderer == NULL){
@@ -237,23 +240,23 @@ bool load(){
     return success;
 }
 
-SDL_Surface* load_surface( const char* path ){
-	SDL_Surface* optimized_surface = NULL; //Superficie optimizada para blitting
-	SDL_Surface* png_surface = IMG_Load(path); //Imagen cargada mediante SDL_Image
-	if( png_surface == NULL){
-		cerr<<"No se ha podido cargar la im�gen en "<<path<<":"<<IMG_GetError()<<endl;
-	}else{
-		//Optimizamos la superficie y regresamos la imagen
-		optimized_surface = SDL_ConvertSurface( png_surface, win_surface->format, 0);
-		if( optimized_surface == NULL ){
-			cerr<<"No se ha posido optimizar la superficie: "<<SDL_GetError()<<endl;
-		}else{
-			SDL_FreeSurface(png_surface);
-			return optimized_surface;
-		}
-	}
-	return NULL;
-}
+// SDL_Surface* load_surface( const char* path ){
+// 	SDL_Surface* optimized_surface = NULL; //Superficie optimizada para blitting
+// 	SDL_Surface* png_surface = IMG_Load(path); //Imagen cargada mediante SDL_Image
+// 	if( png_surface == NULL){
+// 		cerr<<"No se ha podido cargar la im�gen en "<<path<<":"<<IMG_GetError()<<endl;
+// 	}else{
+// 		//Optimizamos la superficie y regresamos la imagen
+// 		optimized_surface = SDL_ConvertSurface( png_surface, win_surface->format, 0);
+// 		if( optimized_surface == NULL ){
+// 			cerr<<"No se ha posido optimizar la superficie: "<<SDL_GetError()<<endl;
+// 		}else{
+// 			SDL_FreeSurface(png_surface);
+// 			return optimized_surface;
+// 		}
+// 	}
+// 	return NULL;
+// }
 
 void exit(){
 
@@ -262,8 +265,8 @@ void exit(){
     SDL_FreeSurface(img_surface);
     img_surface = NULL;
     
-    SDL_FreeSurface(win_surface);
-    win_surface = NULL;
+    // SDL_FreeSurface(win_surface);
+    // win_surface = NULL;
 
 	SDL_DestroyRenderer(win_renderer);
 	win_renderer = NULL;
